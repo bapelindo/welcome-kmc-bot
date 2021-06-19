@@ -1,0 +1,7 @@
+{
+    "token": "Nzk2OTQxNDQ5NTgwOTA0NDU4.X_fPkA.EwtFw3CC1aWiugT2pSeu8cYtLng",
+    "prefix": "!",
+    "welchannel": "homework-help",
+    "welchannels" : "💬│main-chat",
+    "title" : "`Welcome <@!member.user.id> <@`+${member.user.id}+`> To `${member.guild.name}` :tada:"
+}
