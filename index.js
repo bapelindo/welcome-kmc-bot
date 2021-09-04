@@ -28,7 +28,7 @@ client.on('reconnecting', () => console.warn('Reconnecting...'))
 resizeText = (canvas, txt, maxWidth, fontSize) => {
   // canvas created in constructor
   ctx = canvas.getContext(`2d`)
-  ctx.font = `${fontSize}px League Spartan Bold`;
+  ctx.font = `${fontSize}px Courier`;
   var minFontSize = 10;
   var width = ctx.measureText(txt).width;
   if (width > maxWidth) {
@@ -40,7 +40,7 @@ resizeText = (canvas, txt, maxWidth, fontSize) => {
       if (newfontSize < minFontSize) {
         return { fontSize: `${minFontSize}px` };
       }
-      ctx.font = `${newfontSize}px League Spartan Bold`;
+      ctx.font = `${newfontSize}px Courier`;
       newWidth = ctx.measureText(txt).width;
       if (newWidth < maxWidth && decrement === 1) {
         decrement = 0.1;
@@ -57,18 +57,24 @@ resizeText = (canvas, txt, maxWidth, fontSize) => {
 
 const { registerFont } = require(`canvas`);
 registerFont(`league.otf`, { family: `League Spartan Bold` });
-registerFont(`edo.ttf`, { family: `Edo` });
+registerFont(`courier.ttf`, { family: `Courier` });
 
 const al = ["PLAYING", "WATCHING"];
 const aln = ["guild.memberCount", "Watching"];
 let value = 0;
 client.on(`ready`, () => {
   console.log(`${client.user.tag} is Ready!`);
-  setInterval(() => {
-    const index = Math.floor(Math.random() * (al.length));
-    client.user.setActivity(`${aln[index]}`, { type: `${al[index]}` })
-    //client.user.setUsername(value++);
-  }, 1000);
+  client.guilds.cache.each((guild) => {
+
+	const al = ["PLAYING", "WATCHING", "LISTENING"];
+	const aln = [ `with ${guild.memberCount} Member`,`with ${guild.name} Server`, `Point Blank`]
+
+	setInterval(() => {
+  	const io = Math.floor(Math.random() * (al.length));
+		const ind = Math.floor(Math.random() * (aln.length));
+  	client.user.setActivity(`${aln[ind]}`, {type: `${al[io]}`});
+	 	}, 10000);
+	});
 });
 
 client.on(`guildMemberAdd`, async member => {
@@ -97,7 +103,7 @@ client.on(`guildMemberAdd`, async member => {
   ctx.restore();
 
   ctx.save();
-  ctx.translate(79, 440);
+  ctx.translate(135, 440);
   ctx.font = resizeText(canvas, `${member.user.username}`, 1000, 112);
   ctx.textAlign = `left`;
   ctx.fillStyle = `#ffe479`;
@@ -106,7 +112,7 @@ client.on(`guildMemberAdd`, async member => {
 
   ctx.save();
   ctx.translate(135, 580);
-  ctx.font = `112px League Spartan`;
+  ctx.font = `112px Courier`;
   ctx.textAlign = `left`;
   ctx.fillStyle = `#ffe479`;
   ctx.fillText(`#${member.user.discriminator}`, 0, 0);
@@ -149,9 +155,9 @@ client.on(`guildMemberAdd`, async member => {
 
   const embed = new Discord.MessageEmbed()
     .setColor(`RANDOM`)
-    .setAuthor(`${member.guild.name} @${member.user.id}`, `${member.guild.iconURL()}`)
-    .setTitle(config.title)
-    .setDescription(`Jangan lupa baca <#786978442016194617>.\nBiar lebih akrab kenalan dulu di <#786983049929424977>.\nSelamat bersenang senang <@${member.user.id}>.`)
+    .setAuthor(`${member.guild.name}`, `${member.guild.iconURL()}`)
+    .setTitle(`Welcome ${member.user.username} to ${member.guild.name} :tada:`)
+    .setDescription(`Selamat datang dan selamat bersenang-senang ^_^`)
     .setThumbnail(`${member.user.displayAvatarURL({ format: `png` })}`)
     .setTimestamp()
 
@@ -213,15 +219,16 @@ client.on(`message`, message => {
 
 var countx, count = 0
 client.on(`message`,async message => {
-  if (message.channel.id === '792358619983118351') {
+  //const channel = member.guild.channels.cache.find(ch => ch.name === config.counts);
+  if (message.channel.id === '855968540011659305') {
     if (message.member.user.bot) return
     if (Number(message.content) === count + 1) {
       count++
       message.delete()
-
       message.guild.members.cache.get(client.user.id).setNickname(message.author.username)
       //client.user.setAvatar(message.author.avatarURL())
-      message.channel.send(`${message.member.nickname} : ${count}`)
+      message.channel.send(`${message.member.displayName
+} : ${count}`)
     }
     else if (message.member.id !== client.user.id) {
       countx = count+1
